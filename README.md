@@ -35,11 +35,11 @@ Redactions are **permanent and irrecoverable** in exported files:
 
 ## Supported Files
 
-| Format | Detection Method |
-|--------|-----------------|
-| **PNG, JPG, WEBP** | Tesseract.js OCR (runs in web worker) |
-| **PDF (text-based)** | PDF.js `getTextContent()` — instant, no OCR needed |
-| **PDF (scanned)** | Falls back to Tesseract.js OCR |
+| Format               | Detection Method                                     |
+|----------------------|------------------------------------------------------|
+| **PNG, JPG, WEBP**   | Tesseract.js OCR (runs in web worker)                |
+| **PDF (text-based)** | PDF.js `getTextContent()` — instant, no OCR needed   |
+| **PDF (scanned)**    | Falls back to Tesseract.js OCR                       |
 
 Upload via file picker, drag-and-drop, or paste from clipboard (Ctrl+V / Cmd+V).
 
@@ -101,11 +101,11 @@ Push to GitHub and connect to [Vercel](https://vercel.com). No build configurati
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl+Z` / `Cmd+Z` | Undo |
-| `Ctrl+Shift+Z` / `Cmd+Shift+Z` | Redo |
-| `Ctrl+V` / `Cmd+V` | Paste image from clipboard |
+| Shortcut              | Action                     |
+|-----------------------|----------------------------|
+| `Ctrl+Z` / `Cmd+Z`    | Undo                       |
+| `Ctrl+Y` / `Cmd+Y`    | Redo                       |
+| `Ctrl+V` / `Cmd+V`    | Paste image from clipboard |
 
 ## License
 

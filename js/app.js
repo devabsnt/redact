@@ -628,7 +628,7 @@ BLKOUT.App = (function () {
       if (mod && !e.shiftKey && e.key === 'z') {
         e.preventDefault();
         doUndo();
-      } else if (mod && e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
+      } else if (mod && (e.key === 'y' || e.key === 'Y')) {
         e.preventDefault();
         doRedo();
       }
