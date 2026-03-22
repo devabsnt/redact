@@ -95,10 +95,6 @@ npx serve .
 
 Open `http://localhost:8000` in your browser.
 
-## Deploy
-
-Push to GitHub and connect to [Vercel](https://vercel.com). No build configuration needed — it deploys as a static site. The `vercel.json` configures required COOP/COEP headers for SharedArrayBuffer support.
-
 ## Keyboard Shortcuts
 
 | Shortcut              | Action                     |
