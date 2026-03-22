@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>redact.fyi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="toolbar" id="toolbar">
+    <div class="toolbar-group">
+      <span class="brand">redact<span class="brand-dot">.</span>fyi</span>
+      <div class="toolbar-divider"></div>
+      <button class="tool-btn" id="uploadBtn" title="Upload file">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 10V2m0 0L5 5m3-3l3 3M2 10v2a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+        </svg>
+        <span class="btn-label">Upload</span>
+      </button>
+      <button class="tool-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 7h7a3 3 0 010 6H8M3 7l3-3M3 7l3 3"/>
+        </svg>
+      </button>
+      <button class="tool-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)" disabled>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M13 7H6a3 3 0 000 6h2M13 7l-3-3M13 7l-3 3"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="toolbar-group">
+      <div class="toggle-group" id="modeToggle">
+        <button class="toggle-btn active" data-mode="auto">Auto</button>
+        <button class="toggle-btn" data-mode="manual">Manual</button>
+      </div>
+    </div>
+
+    <div class="toolbar-group">
+      <div class="toggle-group" id="styleToggle">
+        <button class="toggle-btn active" data-style="pixelate" title="Pixelate">&#9638;</button>
+        <button class="toggle-btn" data-style="blackbox" title="Black box">&#11035;</button>
+      </div>
+      <div class="toolbar-divider"></div>
+      <button class="tool-btn primary" id="exportBtn" title="Export" disabled>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 2v8m0 0l-3-3m3 3l3-3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1"/>
+        </svg>
+        <span class="btn-label">Export</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="main-container" id="mainContainer">
+    <aside class="sidebar" id="sidebar" hidden>
+      <div class="thumbnail-list" id="thumbnailList"></div>
+    </aside>
+
+    <main class="canvas-area" id="canvasArea">
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-content">
+          <div class="dropzone-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <rect x="6" y="6" width="36" height="36" rx="4"/>
+              <path d="M24 16v16M16 24h16"/>
+            </svg>
+          </div>
+          <h2>Drop an image or PDF here</h2>
+          <p class="dropzone-sub">or paste from clipboard (Ctrl+V / Cmd+V)</p>
+          <button class="upload-btn" id="dropzoneUploadBtn">Choose File</button>
+          <p class="supported-formats">PNG, JPG, WEBP, PDF</p>
+        </div>
+      </div>
+
+      <div class="viewer" id="viewer" hidden>
+        <div class="pages-container" id="pagesContainer"></div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="find-bar" id="findBar" hidden>
+    <div class="find-bar-inner">
+      <span class="find-label">Find &amp; Redact</span>
+      <input type="text" class="find-input" id="findInput" placeholder="Search text...">
+      <label class="find-option" title="Case sensitive">
+        <input type="checkbox" id="caseSensitive">
+        <span>Aa</span>
+      </label>
+      <label class="find-option" title="Regular expression">
+        <input type="checkbox" id="regexToggle">
+        <span>.*</span>
+      </label>
+      <span class="match-count" id="matchCount"></span>
+      <button class="find-btn" id="findRedactBtn" disabled>Redact All</button>
+    </div>
+  </footer>
+
+  <div class="context-popup" id="contextPopup" hidden>
+    <button class="popup-action" id="redactThis">Redact this</button>
+    <button class="popup-action" id="redactAllWord">Redact all '<span id="popupWord"></span>' <span class="popup-count" id="popupCount"></span></button>
+    <button class="popup-action" id="redactSimilar">Redact similar</button>
+    <button class="popup-action cancel" id="popupCancel">Cancel</button>
+  </div>
+
+  <div class="selection-rect" id="selectionRect" hidden></div>
+
+  <div class="overlay" id="analysisOverlay" hidden>
+    <div class="overlay-box">
+      <div class="shimmer-bar"></div>
+      <span id="analysisText">Analyzing...</span>
+    </div>
+  </div>
+
+  <div class="overlay" id="progressOverlay" hidden>
+    <div class="overlay-box">
+      <div class="shimmer-bar"></div>
+      <span id="progressText">Exporting...</span>
+    </div>
+  </div>
+
+  <div class="privacy-note">Your files never leave your device. All processing happens locally in your browser.</div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp,.pdf" hidden>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+
+  <script src="js/undo.js"></script>
+  <script src="js/redaction.js"></script>
+  <script src="js/ocr-worker.js"></script>
+  <script src="js/image-handler.js"></script>
+  <script src="js/pdf-handler.js"></script>
+  <script src="js/detection.js"></script>
+  <script src="js/find-redact.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

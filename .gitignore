@@ -1,0 +1,8 @@
+.claude/
+prompt.md
+test-document.pdf
+whatsAppTest.jpg
+*.test.*
+.DS_Store
+Thumbs.db
+node_modules/
